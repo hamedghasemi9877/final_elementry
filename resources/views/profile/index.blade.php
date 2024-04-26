@@ -13,7 +13,20 @@
             
             <a href="{{ route('post.create') }}" class="btn btn-success" style="float: right">New Tweet</a>
             <a href="/" class="btn btn-info" style="float: right">home</a><br><br>
-           
+
+
+
+ {{-- upload file --}}
+        <form  action="" method="POST" >
+                @csrf
+                <input type="file" name="file" />
+                <input type="submit" class="btn btn-success" />
+        </form>
+{{--  --}}
+
+
+
+
             @if(count($posts)>0)
             <h1 style="background-color: rgb(69, 75, 159)">Your Tweets</h1>
             <div class="container">
@@ -23,7 +36,7 @@
                 <thead>
                     <th >title</th>
                     <th >body</th>
-                    <th  >comments</th>
+                    <th >comments</th>
                     <th >edit</th>
                     
                     <th>delete tweets</th>
