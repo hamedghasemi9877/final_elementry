@@ -23,7 +23,10 @@ class StoreProfileRequest extends FormRequest
     {
         return [
             'title' => 'required',
-            'body' => 'required'
+            'body' => 'required',
+            'image' => 'image|mimes:jpeg,png,jpg|max:300', //for example size:1999 and just validate jpeg,png,jpg file
+            'video' => 'mimes:mp4|max:3000' //for example size:19990 and just validate mp4 file
         ];
+        
     }
 }

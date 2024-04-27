@@ -9,6 +9,7 @@ use App\Models\Comment;
 use Conner\Likeable\Likeable;
 use Illuminate\Support\Collection;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Contracts\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
@@ -18,7 +19,7 @@ class Post extends Model
 
 
     protected $table = 'posts';
-    protected $fillable = ['title', 'body'];
+    protected $fillable = ['title','body','image','video'];
     
     public function comments()
     {
@@ -48,4 +49,5 @@ class Post extends Model
     {
         return $this->hasMany(Report::class);
     }
+  
 }

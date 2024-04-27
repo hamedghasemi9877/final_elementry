@@ -36,7 +36,9 @@
             <table class="table table-bordered">
                 <thead style="text-align:center">
                     <th style="text-align:center">id</th>
-                    <th>title</th>
+                    <th style="text-align:center">title</th>
+                    <th style="text-align:center">image</th>
+                    <th style="text-align:center">video</th>
                     <th style="text-align:center">show</th>
                     
                 </thead>
@@ -46,6 +48,16 @@
                 <tr>
                     <td style="text-align:center">{{ $post->id }}</td>
                     <td style="text-align:center">{{ $post->title }}</td>
+                    <td> <img width="60" height="40" controls src="{{ asset('storage/' . $post->image) }}"></td>
+                    <td>
+                        <video width="100" height="60" controls>
+                            <source src="{{ asset('storage/' . $post->video) }}" type="video/mp4">
+                    </video>
+                            </td>
+                        
+                        
+                        
+                    
                     <td style="text-align:center"> <a href="/posts/{{$post->id}}">show tweet</a></td> 
                     
                 @endforeach

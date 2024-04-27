@@ -127,9 +127,27 @@
                 </tbody>
    
             </table>
-            
+            <div>
+
+             
             <h1> <a href="/">home</a> </h1>
-             <h3s style="font-size: 40px;text-align: center"> {{$post->body}}</h3>
+            <p5> {{$post->body}}</p5>
+    <div>
+        <video width="320" height="240" controls>
+                <source src="{{ asset('storage/' . $post->video) }}" type="video/mp4">
+        </video>
+    </div>
+    <div>
+    </div> 
+    ///
+    <div>
+        <img width="320" height="240" controls src="{{ asset('storage/' . $post->image) }}">
+    </div>         
+        
+             
+                
+        </div>
+        </div>
         </div>
     </div>
 </div>
