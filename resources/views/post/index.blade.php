@@ -40,6 +40,7 @@
                     <th style="text-align:center">image</th>
                     <th style="text-align:center">video</th>
                     <th style="text-align:center">show</th>
+                    <th style="text-align:center">retweet</th>
                     
                 </thead>
                 <tbody>
@@ -48,17 +49,30 @@
                 <tr>
                     <td style="text-align:center">{{ $post->id }}</td>
                     <td style="text-align:center">{{ $post->title }}</td>
-                    <td> <img width="60" height="40" controls src="{{ asset('storage/' . $post->image) }}"></td>
                     <td>
+        @if($post->image)
+                     <img width="60" height="40" controls src="{{ asset('storage/' . $post->image) }}"></td>
+        @else
+                       <div> no image</div>
+        @endif
+                    
+                    <td>
+        @if($post->video)
                         <video width="100" height="60" controls>
                             <source src="{{ asset('storage/' . $post->video) }}" type="video/mp4">
                     </video>
+
+
+         @else
+                       <div> no video</div>
+         @endif
                             </td>
                         
                         
                         
                     
                     <td style="text-align:center"> <a href="/posts/{{$post->id}}">show tweet</a></td> 
+                    <td style="text-align: center"><a class="retweet" href=""><span style='font-size:25px'>&#8605;</span>retweet</a></td> 
                     
                 @endforeach
                 
