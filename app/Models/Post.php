@@ -6,6 +6,7 @@ use App\Models\Like;
 use App\Models\User;
 use App\Models\Report;
 use App\Models\Comment;
+use App\Models\Retweet;
 use Conner\Likeable\Likeable;
 use Illuminate\Support\Collection;
 use Illuminate\Database\Eloquent\Model;
@@ -48,6 +49,10 @@ class Post extends Model
     public function reports()
     {
         return $this->hasMany(Report::class);
+    }
+    public function retweets()
+    {
+        return $this->hasMany(Retweet::class);
     }
   
 }

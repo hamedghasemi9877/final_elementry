@@ -32,6 +32,7 @@
                     <th  width="20px">like</th>
                     <th  width="20px">dislike</th>
                     <th style="color: red" width="150px">Reports</th>
+                    <th style="text-align:center">retweet</th>
                 </thead>
                 <tbody>
                
@@ -84,6 +85,10 @@
                     <td> @foreach($post->comments as $comment)
                         {{$comment->body}}<hr>
                         @endforeach</td>
+
+                        
+                        {{-- Like service --}}
+
                     <td>
                     <form action="{{ route('like.post', $post->id) }}"
                         method="post">
@@ -105,6 +110,9 @@
                          </button>
                          </form>
                 </td>
+{{--  --}}
+
+                {{-- Report --}}
             <td>
 
               @auth
@@ -119,7 +127,29 @@
             @endauth
 
             </td>
-            
+{{--  --}}
+
+
+
+            {{-- Retweet --}}
+
+            <td>
+
+              @auth
+                <form action="{{ route('retweet.store', $post->id) }}" method="POST">
+                    @csrf
+                    <button type="submit" class="btn btn-primary">Retweet</button>
+                    </form>
+             @else
+                    <a href="{{route('login')}}">login</a> then you can retweet
+
+            @endauth
+
+            </td>
+
+
+  {{--  --}}
+         
                 </tr>
               
                 
@@ -132,19 +162,28 @@
              
             <h1> <a href="/">home</a> </h1>
             <p5> {{$post->body}}</p5>
-    <div>
+ @if($post->video)
+            <div>
+
+
         <video width="320" height="240" controls>
                 <source src="{{ asset('storage/' . $post->video) }}" type="video/mp4">
         </video>
     </div>
+
+  @else
+    <div> no video</div>
+@endif
     <div>
     </div> 
     ///
+    @if($post->image)
     <div>
         <img width="320" height="240" controls src="{{ asset('storage/' . $post->image) }}">
     </div>         
-        
-             
+ @else
+    <div> no image</div>
+@endif    
                 
         </div>
         </div>

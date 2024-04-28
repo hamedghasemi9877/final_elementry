@@ -7,6 +7,7 @@ use App\Http\Controllers\PostController;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\RetweetController;
 
 
 Auth::routes();
@@ -47,7 +48,10 @@ Route::post('/unlike-post/{id}',[LikeController::class,'unlikePost'])->middlewar
 
 //related to Report
 Route::post('/report-post/{post_id}', [ReportController::class,'reportpost'])->name('post.report');
-
-
 //---------------------------------------------------------------------------------------------------------------------
 
+//related to Report
+
+Route::post('/posts/{post_id}/retweet', [RetweetController::class, 'retweet'])->name('retweet.store');
+Route::delete('/retweets/{id}', [RetweetController::class, 'delete'])->name('retweet.delete');
+//---------------------------------------------------------------------------------------------------------------------

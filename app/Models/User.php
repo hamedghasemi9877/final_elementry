@@ -5,6 +5,7 @@ namespace App\Models;
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use App\Models\Post;
 use App\Models\Report;
+use App\Models\Retweet;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -59,6 +60,10 @@ class User extends Authenticatable
     public function comments()
     {
         return $this->hasMany(comment::class);
+    }
+    public function retweets()
+    {
+        return $this->hasMany(Retweet::class);
     }
   
    

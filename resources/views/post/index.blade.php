@@ -40,7 +40,7 @@
                     <th style="text-align:center">image</th>
                     <th style="text-align:center">video</th>
                     <th style="text-align:center">show</th>
-                    <th style="text-align:center">retweet</th>
+                    
                     
                 </thead>
                 <tbody>
@@ -72,7 +72,7 @@
                         
                     
                     <td style="text-align:center"> <a href="/posts/{{$post->id}}">show tweet</a></td> 
-                    <td style="text-align: center"><a class="retweet" href=""><span style='font-size:25px'>&#8605;</span>retweet</a></td> 
+                    
                     
                 @endforeach
                 
