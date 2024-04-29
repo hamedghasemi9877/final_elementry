@@ -37,7 +37,7 @@ class PostController extends Controller
             ->paginate(10);
         }
      $users = User::all();
-     $user = User::first();
+     $user = auth()->user();
             
          return view('post.index', compact('posts','users','user'));
    
