@@ -6,6 +6,7 @@ namespace App\Models;
 use App\Models\Post;
 use App\Models\Report;
 use App\Models\Retweet;
+use App\Models\Follower;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -47,25 +48,45 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
+    //relation post
     public function posts()
     {
         return $this->hasMany(Post::class);
     }
 
+    //relation like
     public function likes()
     {
         return $this->hasMany(Post::class);
     }
-    
+
+    //relation comment
     public function comments()
     {
         return $this->hasMany(comment::class);
     }
+
+    //relation retweet
     public function retweets()
     {
         return $this->hasMany(Retweet::class);
     }
   
-   
 
+    //relation  follow
+    public function followers()
+    {
+        return $this->hasMany(Follower::class, 'following_id', 'user_id');
+    }
+
+
+    public function following()
+    {
+        return $this->hasMany(Follower::class,'user_id', 'following_id');
+    }
+
+
+
+ 
 }

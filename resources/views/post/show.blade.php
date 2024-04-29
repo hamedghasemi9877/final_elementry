@@ -28,6 +28,8 @@
                   
                    
                     <th>write your idea</th>
+                    <th>follow</th>
+                    <th>unfollow</th>
                     <th  width="250px" style="color:blue">comments</th>
                     <th  width="20px">like</th>
                     <th  width="20px">dislike</th>
@@ -78,6 +80,19 @@
                           
                         
     @endauth
+    
+<td>
+        <form action="{{ route('follow', $user) }}" method="POST">
+            @csrf
+            <button type="submit">Follow</button>
+        </form>
+</td>
+<td>
+        <form action="{{ route('follow', $user) }}" method="POST">
+            @csrf
+            <button type="submit">unFollow</button>
+        </form>
+</td>
 
                     {{-- comment in index --}}
 

@@ -24,21 +24,22 @@ class PostController extends Controller
         if($sort=='newest'){
             $posts = Post::withCount(['likes', 'comments'])
             ->orderBy('created_at', 'desc')
-            ->get();
+            ->paginate(10);
         }
         if($sort=='likeable'){
             $posts = Post::withCount(['likes', 'comments'])
             ->orderBy('likes_count', 'desc')
-            ->get();
+            ->paginate(10);
         }
         if($sort=='commentable'){
             $posts = Post::withCount(['likes', 'comments'])
             ->orderBy('comments_count', 'desc')
-            ->get();
+            ->paginate(10);
         }
-     
-                     
-         return view('post.index', compact('posts'));
+     $users = User::all();
+     $user = User::first();
+            
+         return view('post.index', compact('posts','users','user'));
    
 }
 
@@ -51,9 +52,11 @@ class PostController extends Controller
         
         
          $post = Post::find($id);
+         $user = auth()->user()->id;
+         
         
       
-         return view('post.show',compact('post'));
+         return view('post.show',compact('post','user'));
        
 
         

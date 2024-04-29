@@ -8,6 +8,7 @@ use App\Http\Controllers\ReportController;
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RetweetController;
+use App\Http\Controllers\FollowerController;
 
 
 Auth::routes();
@@ -23,12 +24,12 @@ Route::get('posts/{post}', [PostController::class, 'show'])->name('post.show');
 
 //related to Profile
 
-Route::get('profile', [ProfileController::class, 'index'])->middleware('auth')->name('profile.index');
-Route::get('posts', [ProfileController::class, 'create'])->middleware('auth')->name('post.create');
-Route::post('posts', [ProfileController::class, 'store'])->middleware('auth')->name('post.store');
-Route::get('posts/{post}/edit', [ProfileController::class,'edit'])->middleware('auth')->name('post.edit');
-Route::put('posts/{post}/update', [ProfileController::class, 'update'])->middleware('auth')->name('post.update');
-Route::delete('posts/{post}/delete', [ProfileController::class, 'destroy'])->middleware('auth')->name('post.destroy');
+Route::get('profile/{user}', [ProfileController::class, 'show'])->name('profile.show');
+Route::get('posts', [ProfileController::class, 'create'])->name('post.create');
+Route::post('posts', [ProfileController::class, 'store'])->name('post.store');
+Route::get('posts/{post}/edit', [ProfileController::class,'edit'])->name('post.edit');
+Route::put('posts/{post}/update', [ProfileController::class, 'update'])->name('post.update');
+Route::delete('posts/{post}/delete', [ProfileController::class, 'destroy'])->name('post.destroy');
 //---------------------------------------------------------------------------------------------------------------------
 
 
@@ -54,4 +55,9 @@ Route::post('/report-post/{post_id}', [ReportController::class,'reportpost'])->n
 
 Route::post('/posts/{post_id}/retweet', [RetweetController::class, 'retweet'])->name('retweet.store');
 Route::delete('/retweets/{id}', [RetweetController::class, 'delete'])->name('retweet.delete');
+//---------------------------------------------------------------------------------------------------------------------
+
+//related to follow
+Route::post('follow/{user_id}', [FollowerController::class, 'follow'])->name('follow');
+Route::delete('unfollow/{user_id}', [FollowerController::class, 'unfollow'])->name('unfollow');
 //---------------------------------------------------------------------------------------------------------------------

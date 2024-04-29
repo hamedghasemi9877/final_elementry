@@ -15,23 +15,18 @@ use Illuminate\Support\Facades\Storage;
 
 class ProfileController extends Controller
 {
-  public function __constract(){
-
-    return $this->middleware('auth');
-    }
-
-
-
-
-    public function index()
+  
+    public function show(User $user)
     {
         
-        $posts = auth()->user()->posts;
-        //In order to avoid the N+1 problem
-        $comments = Post::with('comments')->get();
-        $posts = Post::withCount(['likes', 'comments'])->get(); 
-     
-        return view('profile.index',compact('posts','comments'));
+        $posts= $user->posts()->withCount('likes', 'comments')->get();
+       
+
+      
+        //  if($user = auth()->user()){
+        //  $followers = $user->followers;
+        //  }
+        return view('profile.index',compact('posts'));
 
     }
 
@@ -97,7 +92,7 @@ class ProfileController extends Controller
         $post->save();
         
         
-        return redirect('/profile')->with('message','A new tweet has been registered');
+        return redirect('/')->with('message','A new tweet has been registered');
     }
 
 

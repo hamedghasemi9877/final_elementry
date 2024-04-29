@@ -11,9 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('posts', function (Blueprint $table) {
-            $table->string('image')->nullable()->change();
-            $table->string('video')->nullable()->change();
+        Schema::create('followers', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('user_id')->constrained()->onDelete('cascade');
+            $table->foreignId('following_id')->constrained('users')->onDelete('cascade');
+            $table->timestamps();
+
         });
     }
 
@@ -22,9 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('posts', function (Blueprint $table) {
-            $table->dropColumn('image');
-            $table->dropColumn('video');
-        });
+        Schema::dropIfExists('followers');
     }
 };
