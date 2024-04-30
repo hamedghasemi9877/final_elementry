@@ -12,6 +12,13 @@
 </div>
 @endif
 
+{{-- information of owner and permission status --}}
+<h1 style="background-color: chartreuse">welcome to page of:<u>{{$user->name}}</u></h1>
+<h2 style="color: blue"><u>{{$visibility}}</u></h2> 
+{{--  --}}
+
+
+
 
 
 <div class="container">
@@ -74,7 +81,7 @@
             
 
 
-                    @foreach ($followingPosts as $post)
+                    {{-- @foreach ($followingPosts as $post)
                 <tr>
                     <td>{{ $post->user->name }}</td>
                     <td style="color:rgb(69, 40, 255)" >{{ $post->title }}</td>
@@ -94,7 +101,7 @@
                         <hr>
                         vv 
                         
-                        @endforeach</td>
+                        @endforeach</td> --}}
 
                         
                     <td>
@@ -108,7 +115,7 @@
                    @endif
                   
                 </tr>
-                @endforeach
+                {{-- @endforeach --}}
                 </tbody>
             
    

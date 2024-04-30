@@ -19,23 +19,10 @@ class ProfileController extends Controller
     public function index(User $user)
     {
         
-            // Get the authenticated user
-            $authUser = auth()->user();
-        
-            // Retrieve posts from the specified user
-            $posts = $user->posts()->withCount('likes', 'comments')->get();
-        
-            // Check if the authenticated user follows the specified user
-            $isFollowing = $authUser->isFollowing($user);
-        
-            // Retrieve posts from users whom the authenticated user is following
-            $followingPosts = collect();
-            if ($isFollowing) {
-                $followingPosts = $authUser->following()->with('posts')->get()->pluck('posts')->flatten();
-            }
-        
-            // Return the view with the posts and following posts
-            return view('profile.index', compact('posts', 'user', 'followingPosts', 'authUser', 'isFollowing'));
+            $posts = $user->posts;
+            $visibility = $user->visibility;
+       
+            return view('profile.index', compact('posts','user','visibility'));
         }
 
 
