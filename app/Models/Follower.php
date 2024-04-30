@@ -19,19 +19,6 @@ class Follower extends Model
         return $this->belongsTo(User::class);
     }
 
-    public function follow(User $user)
-    {
-        return $this->followings()->attach($user->id);
-    }
-    
-    public function unfollow(User $user)
-    {
-        return $this->followings()->detach($user->id);
-    }
-    
-    public function isFollowing(User $user)
-    {
-        return $this->followings()->where('id', $user->id)->exists();
-    }
+
 
 }

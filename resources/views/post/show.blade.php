@@ -82,13 +82,13 @@
     @endauth
     
 <td>
-        <form action="{{ route('follow', $user) }}" method="POST">
+        <form action="{{ route('follow', $user->id) }}" method="POST">
             @csrf
             <button type="submit">Follow</button>
         </form>
 </td>
 <td>
-        <form action="{{ route('follow', $user) }}" method="POST">
+        <form action="{{ route('unfollow', $user->id) }}" method="POST">
             @csrf
             <button type="submit">unFollow</button>
         </form>

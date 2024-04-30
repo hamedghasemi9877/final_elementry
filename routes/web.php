@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\LikeController;
 use App\Http\Controllers\PostController;
+use App\Http\Controllers\UserController;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\ProfileController;
@@ -24,7 +25,7 @@ Route::get('posts/{post}', [PostController::class, 'show'])->name('post.show');
 
 //related to Profile
 
-Route::get('profile/{user}', [ProfileController::class, 'show'])->name('profile.show');
+Route::get('profile/{user}', [ProfileController::class, 'index'])->name('profile.index');
 Route::get('posts', [ProfileController::class, 'create'])->name('post.create');
 Route::post('posts', [ProfileController::class, 'store'])->name('post.store');
 Route::get('posts/{post}/edit', [ProfileController::class,'edit'])->name('post.edit');
@@ -58,6 +59,11 @@ Route::delete('/retweets/{id}', [RetweetController::class, 'delete'])->name('ret
 //---------------------------------------------------------------------------------------------------------------------
 
 //related to follow
-Route::post('follow/{user_id}', [FollowerController::class, 'follow'])->name('follow');
-Route::delete('unfollow/{user_id}', [FollowerController::class, 'unfollow'])->name('unfollow');
+Route::post('follow/{user}', [FollowerController::class, 'follow'])->name('follow');
+Route::delete('unfollow/{user}', [FollowerController::class, 'unfollow'])->name('unfollow');
+//---------------------------------------------------------------------------------------------------------------------
+
+//related to user
+Route::post('users/{user}/visibility/update', [UserController::class, 'Visibility'])->name('users.visibility.update');
+
 //---------------------------------------------------------------------------------------------------------------------

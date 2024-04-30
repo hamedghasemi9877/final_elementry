@@ -36,7 +36,7 @@ class PostController extends Controller
             ->orderBy('comments_count', 'desc')
             ->paginate(10);
         }
-     $users = User::all();
+     $users = User::where('visibility','public')->get();
      $user = auth()->user();
             
          return view('post.index', compact('posts','users','user'));
@@ -47,20 +47,20 @@ class PostController extends Controller
 
 
 
-    public function show(Request $request,$id) {
+//     public function show(Request $request,$id) {
        
         
         
-         $post = Post::find($id);
-         $user = auth()->user()->id;
+//          $post = Post::find($id);
+//          $user = auth()->user()->id;
          
         
       
-         return view('post.show',compact('post','user'));
+//          return view('post.show',compact('post','user'));
        
 
         
-}
+// }
 
 
   

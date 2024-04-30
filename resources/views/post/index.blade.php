@@ -49,8 +49,8 @@
                     <th  width="20px">like</th>
                     <th  width="20px">dislike</th>
                     <th style="color: red" width="150px">Reports</th>
-                    <th style="text-align:center">retweet</th>
-                    <th style="text-align:center">show</th>
+                    <th style="text-align:center">retweets</th>
+                    <th style="text-align:center">Profiles</th>
                     <th style="text-align:center">FollowMetod</th>
                     
                     
@@ -58,7 +58,8 @@
                 </thead>
                 <tbody>
                 @foreach($posts as $post)
-               
+                
+         
                 <tr>
                     <td style="text-align:center">{{ $post->user->name }}</td>
                     
@@ -132,7 +133,7 @@
                     
                         
                    
-                    style="text-align:center"> <a href="{{ route('profile.show',$post->user_id)}}">profile</a></td> 
+                    style="text-align:center"> <a href="{{ route('profile.index',$post->user_id)}}">profile</a></td> 
                     
                     <td >
                       
@@ -148,6 +149,7 @@
                     </td> 
                   
                     
+              
                 
                 @endforeach
                 

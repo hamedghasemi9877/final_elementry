@@ -16,19 +16,27 @@ use Illuminate\Support\Facades\Storage;
 class ProfileController extends Controller
 {
   
-    public function show(User $user)
+    public function index(User $user)
     {
         
-        $posts= $user->posts()->withCount('likes', 'comments')->get();
-       
-
-      
-        //  if($user = auth()->user()){
-        //  $followers = $user->followers;
-        //  }
-        return view('profile.index',compact('posts'));
-
-    }
+            // Get the authenticated user
+            $authUser = auth()->user();
+        
+            // Retrieve posts from the specified user
+            $posts = $user->posts()->withCount('likes', 'comments')->get();
+        
+            // Check if the authenticated user follows the specified user
+            $isFollowing = $authUser->isFollowing($user);
+        
+            // Retrieve posts from users whom the authenticated user is following
+            $followingPosts = collect();
+            if ($isFollowing) {
+                $followingPosts = $authUser->following()->with('posts')->get()->pluck('posts')->flatten();
+            }
+        
+            // Return the view with the posts and following posts
+            return view('profile.index', compact('posts', 'user', 'followingPosts', 'authUser', 'isFollowing'));
+        }
 
 
     
@@ -126,9 +134,10 @@ class ProfileController extends Controller
 
        // Check if new image file is uploaded
        if ($request->hasFile('image')) {
-           // Delete old image file if exists
-           Storage::delete($post->image);
-           // Store new image file
+        if ($post->image) {
+            Storage::delete($post->image);
+        }
+           
            $imagePath = Storage::putFile('images', $request->file('image'));
            // Update image field with new path
           
@@ -137,9 +146,10 @@ class ProfileController extends Controller
    
        // Check if new video file is uploaded
        if ($request->hasFile('video')) {
-           // Delete old video file if exists
-           Storage::delete($post->video);
-           // Store new video file
+        if ($post->video) {
+            Storage::delete($post->video);
+        }
+          
            $videoPath = Storage::putFile('videos', $request->file('video'));
            // Update video field with new path
            $post->video = $videoPath;
@@ -154,7 +164,7 @@ class ProfileController extends Controller
    
     
       
-        return redirect('/profile')->with('message','Your command has been executed!');
+        return redirect(route('profile.index',$post->user_id))->with('message','Your command has been executed!');
     }
 
 

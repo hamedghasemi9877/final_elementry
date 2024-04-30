@@ -10,52 +10,50 @@ use Illuminate\Support\Facades\Auth;
 
 class FollowerController extends Controller
 {
-    public function follow(Post $post,$user_id)
-    {
-          
-      
-   
-    $user = Follower::findOrFail($post);
+ 
+  public function follow( User $user)
+  {
     
-    $follower_id = auth()->id();
-   
-
-    // Check if the user is already being followed
-    $existingFollow = Follower::where('user_id', $follower_id)
-                              ->where('following_id', $user_id)
-                              ->exists();
-
-    if (!$existingFollow) {
-        // Create a new follower record
-        Follower::create([
-            'user_id' => $follower_id,
-            'following_id' => $user_id,
-        ]);
-    }
-          
-            return back()->with('message', 'You are now following ' );
-        
-            
-        
-    }
-    
-        public function unfollow(Post $post,$user_id)
-        {
-            
-    $user = Follower::findOrFail($post);
-    
-    $follower_id = auth()->id();
-   
-
-    // Check if the user is already being followed
-    $existingFollow1 = Follower::where('user_id', $follower_id)
-                              ->where('following_id', $user_id)
-                              ->first();
-
-              if ($existingFollow1) {
-                 $existingFollow1->delete();
-            return back()->with('message', 'You have unfollowed ' );
+      $authUser = auth()->user();
+      if (Follower::where('user_id', $authUser->id)->where('following_id', $user->id)->exists()) {
+        // Relationship already exists, return with an error message or handle appropriately
+        return redirect()->back()->with('error', 'You are already following this user.');
         }
-        return back()->with('error', 'You are not follow' );
-}}
+      if (!$authUser->isFollowing($user->id)) {
+         
+        $data = new Follower();
+       
+       
+        $data->user_id = auth()->id(); 
+       
+        $data->following_id =$user->id; 
 
+        $data->save();
+        return redirect()->back()->with('message','submited!!');
+      }
+
+     
+  }
+
+
+  public function unfollow(User $user)
+  {
+      
+    $authUser = auth()->user();
+
+    
+    $followerRecord = Follower::where('user_id', $authUser->id)
+                               ->where('following_id', $user->id)
+                               ->first();
+
+   
+    if ($followerRecord) {
+       
+        $followerRecord->delete();
+    }
+
+   
+    return redirect()->back()->with('message','submited!!');
+ 
+}
+}

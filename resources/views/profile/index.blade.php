@@ -6,6 +6,13 @@
   {{ session('message') }}
 </div>
 @endif
+@if (session()->has('error'))
+<div  style="font-size: 40px;color:rgb(225, 73, 111) ">
+  {{ session('error') }}
+</div>
+@endif
+
+
 
 <div class="container">
     <div class="row justify-content-center">
@@ -13,19 +20,42 @@
             
             <a href="" class="btn btn-warning" style="float: right">FOLLOW</a>
 
+            @if(auth()->check()&& auth()->user())
+                <div>
+                   
+                 
+                        <form action="{{ route('users.visibility.update', $user->id) }}" method="POST">
+                            @csrf
+                          
+                            <input type="hidden" name="post_id" 
+                                
+                            value="{{$user->id}}">
+                            <label for="visibility">Visibility:</label>
+                            <select name="visibility" id="visibility">
+                                <option value="public">Public</option>
+                                <option value="private">Private</option>
+                            </select>
+                            <button type="submit">change</button>
+                        </form>
+                        <p style="color: blue">You are only allowed to change your status</p>
+                </div>
+           @endif
+
             <a href="/" class="btn btn-info" style="float: right">home</a><br><br>
 
             
 
 
-            @if(count($posts)>0)
+           
             <h1 style="background-color: rgb(69, 75, 159)">Tweets</h1>
             
             <div class="container">
+                <h2>Posts from {{ $user->name }}</h2>
                 <div class="row justify-content-center">
             <table class="table table-bordered">
           
                 <thead>
+                    <th >owner</th>
                     <th >title</th>
                     <th >body</th>
                     <th  width="5px">total likes</th>
@@ -44,8 +74,9 @@
             
 
 
-                @foreach($posts as $post)
+                    @foreach ($followingPosts as $post)
                 <tr>
+                    <td>{{ $post->user->name }}</td>
                     <td style="color:rgb(69, 40, 255)" >{{ $post->title }}</td>
                     <td > {{ $post->body }}</td>
                     <td>{{ $post->likes_count }}</td>
@@ -84,9 +115,7 @@
             </table>      
         </div>
         </div>
-            @else
-            <h1 style="color: black">you dont have any tweet!<br><p> <a href="/">home</a> </p></h1>
-            @endif
+            
            
         </div>
     </div>
