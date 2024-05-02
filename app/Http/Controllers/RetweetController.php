@@ -6,8 +6,19 @@ use App\Models\Post;
 use App\Models\Retweet;
 use Illuminate\Http\Request;
 
-class RetweetController extends Controller
-{
+class RetweetController extends Controller{
+
+
+
+    public function __constract(){
+    
+        return $this->middleware('auth');
+       
+       
+        }
+
+
+
 
     public function retweet(Request $request, $post_id)
     {

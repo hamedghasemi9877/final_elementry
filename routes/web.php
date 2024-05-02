@@ -19,13 +19,13 @@ Auth::routes();
 
 Route::get('/', [PostController::class, 'index'])->name('index');
 Route::get('/posts/sort/{sort}', [PostController::class, 'index'])->name('posts.sort');
-Route::get('posts/{post}', [PostController::class, 'show'])->name('post.show');
+Route::get('posts/{post}', [PostController::class, 'index'])->name('post.show');
 //---------------------------------------------------------------------------------------------------------------------
 
 
 //related to Profile
 
-Route::get('profile/{user}', [ProfileController::class, 'index'])->name('profile.index');
+Route::get('profile/{user}', [ProfileController::class, 'index'])->middleware('auth')->name('profile.index');
 Route::get('posts', [ProfileController::class, 'create'])->name('post.create');
 Route::post('posts', [ProfileController::class, 'store'])->name('post.store');
 Route::get('posts/{post}/edit', [ProfileController::class,'edit'])->name('post.edit');
@@ -37,8 +37,7 @@ Route::delete('posts/{post}/delete', [ProfileController::class, 'destroy'])->nam
 
 //related to Comment
 
-Route::get('comments/create', [CommentController::class, 'create'])->middleware('auth')->name('comment.create');
-Route::post('posts/comments', [CommentController::class, 'store'])->middleware('auth')->name('posts.comments.store');
+Route::post('comments', [CommentController::class, 'store'])->middleware('auth')->name('posts.comments.store');
 Route::get('posts/comments/{post}', [CommentController::class, 'show'])->middleware('auth')->name('posts.comments.show');
 Route::delete('comments/{comment}/delete', [CommentController::class, 'destroy'])->middleware('auth')->name('comments.destroy');
 //--------------------------------------------------------------------------------------------------------------------- 
@@ -49,18 +48,18 @@ Route::post('/like-post/{id}',[LikeController::class,'likePost'])->middleware('a
 Route::post('/unlike-post/{id}',[LikeController::class,'unlikePost'])->middleware('auth')->name('unlike.post');
 
 //related to Report
-Route::post('/report-post/{post_id}', [ReportController::class,'reportpost'])->name('post.report');
+Route::post('/report-post/{post_id}', [ReportController::class,'reportpost'])->middleware('auth')->name('post.report');
 //---------------------------------------------------------------------------------------------------------------------
 
-//related to Report
+//related to Retweet
 
-Route::post('/posts/{post_id}/retweet', [RetweetController::class, 'retweet'])->name('retweet.store');
-Route::delete('/retweets/{id}', [RetweetController::class, 'delete'])->name('retweet.delete');
+Route::post('/posts/{post_id}/retweet', [RetweetController::class, 'retweet'])->middleware('auth')->name('retweet.store');
+Route::delete('/retweets/{id}', [RetweetController::class, 'delete'])->middleware('auth')->name('retweet.delete');
 //---------------------------------------------------------------------------------------------------------------------
 
 //related to follow
-Route::post('follow/{user}', [FollowerController::class, 'follow'])->name('follow');
-Route::delete('unfollow/{user}', [FollowerController::class, 'unfollow'])->name('unfollow');
+Route::post('follow/{user}', [FollowerController::class, 'follow'])->middleware('auth')->name('follow');
+Route::delete('unfollow/{user}', [FollowerController::class, 'unfollow'])->middleware('auth')->name('unfollow');
 //---------------------------------------------------------------------------------------------------------------------
 
 //related to user

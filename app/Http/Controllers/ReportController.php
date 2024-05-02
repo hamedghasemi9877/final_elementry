@@ -10,6 +10,13 @@ use Illuminate\Support\Facades\Auth;
 
 class ReportController extends Controller{  
 
+    public function __constract(){
+    
+        return $this->middleware('auth');
+       
+    }       
+
+
 
     public function reportPost(Request $request,$post_id)
     {

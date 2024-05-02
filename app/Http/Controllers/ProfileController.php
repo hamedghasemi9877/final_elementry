@@ -6,26 +6,45 @@ use Carbon\Carbon;
 use App\Models\Post;
 use App\Models\User;
 use App\Models\Comment;
+use App\Models\Follower;
 use Conner\Likeable\Like;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
-use App\Http\Requests\StoreProfileRequest;
 use Illuminate\Support\Facades\Storage;
+use App\Http\Requests\StoreProfileRequest;
 
 class ProfileController extends Controller
 {
+
+    public function __constract(){
+    
+        return $this->middleware('auth');
+       
+    } 
   
     public function index(User $user)
     {
-        
+
+       $user = auth()->user();
+        $following_id = Follower::where('user_id',$user->id)->first();
+        //  dd($following_id);
+        // $followerPosts = User::where('id', $following_id)->count(); 
+      
+        if($following_id ){
+        $posts = $user->posts;
+        $users = User::where('visibility','public')->get();
+           $visibility = $user->visibility;
+
+            return view('profile.index', compact('posts','user','users','visibility','following_id'));
+        }else{
+            $user = auth()->user();
             $posts = $user->posts;
             $visibility = $user->visibility;
-       
-            return view('profile.index', compact('posts','user','visibility'));
-        }
-
-
+            $users = User::where('visibility','public')->get();
+return view('profile.index', compact('posts','user','users','visibility'));
+}
+    }
     
     public function create()
     {

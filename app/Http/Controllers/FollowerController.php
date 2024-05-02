@@ -15,8 +15,12 @@ class FollowerController extends Controller
   {
     
       $authUser = auth()->user();
+      if($authUser==$user){
+        return redirect()->back()->with('error', 'impossible!!!');
+
+      }
       if (Follower::where('user_id', $authUser->id)->where('following_id', $user->id)->exists()) {
-        // Relationship already exists, return with an error message or handle appropriately
+        
         return redirect()->back()->with('error', 'You are already following this user.');
         }
       if (!$authUser->isFollowing($user->id)) {
@@ -41,7 +45,9 @@ class FollowerController extends Controller
       
     $authUser = auth()->user();
 
-    
+    if($authUser==$user){
+      return redirect()->back()->with('error', 'impossible!!!');
+    }
     $followerRecord = Follower::where('user_id', $authUser->id)
                                ->where('following_id', $user->id)
                                ->first();

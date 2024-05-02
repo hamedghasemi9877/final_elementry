@@ -17,33 +17,20 @@ class CommentController extends Controller
     }
 
 
-    
-    public function create()
-    {
-      
-      $posts =Post::with('comments')->get();
-     
-        return view('comment.create',compact('posts'));
-   
-    }
-
-
-
 
     public function store(StoreCommentRequest $request)
     { 
-      
-if(Auth::check()){ 
+    
+  if(Auth::check()){ 
  
-  $data = Post::where('id',$request->post_id)->first();
   
-      Comment::create([
+      $com = Comment::create([
         'user_id' =>auth()->user()->id,
-        'post_id' =>$data->id,
+        'post_id' =>$request->post_id,
        'body' =>$request->body
       ]);
       
-        return redirect()->back()->with('message','Your Idea Submited!');
+        return redirect('/')->with('message','Your Idea Submited!');
       }
         else
 
@@ -64,7 +51,6 @@ if(Auth::check()){
   $posts = Post::find($id);
     
        
-   
         return view('comment.show',compact('comments','posts'));
     }
     public function destroy(Comment $comment)
