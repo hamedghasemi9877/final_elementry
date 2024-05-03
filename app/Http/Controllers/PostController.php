@@ -16,61 +16,67 @@ class PostController extends Controller{
 
     public function index(Request $request, $sort='newest') {
 
-        $user = auth()->user();
+//         $user = auth()->user();
         
-        if($user){
-         if($sort=='newest'){
-             $posts = Post::withCount(['likes', 'comments'])
-             ->orderBy('created_at', 'desc')
-             ->paginate(10);
-         }
-         if($sort=='likeable'){
-             $posts = Post::withCount(['likes', 'comments'])
-             ->orderBy('likes_count', 'desc')
-             ->paginate(10);
-         }
-         if($sort=='commentable'){
-             $posts = Post::withCount(['likes', 'comments'])
-             ->orderBy('comments_count', 'desc')
-             ->paginate(10);
-         }
+//         if($user){
+//          if($sort=='newest'){
+//              $posts = Post::withCount(['likes', 'comments'])
+//              ->orderBy('created_at', 'desc')
+//              ->paginate(10);
+//          }
+//          if($sort=='likeable'){
+//              $posts = Post::withCount(['likes', 'comments'])
+//              ->orderBy('likes_count', 'desc')
+//              ->paginate(10);
+//          }
+//          if($sort=='commentable'){
+//              $posts = Post::withCount(['likes', 'comments'])
+//              ->orderBy('comments_count', 'desc')
+//              ->paginate(10);
+//          }
 
-         $users = User::where('visibility','private' )->get();
-         $following_id =Follower::where('user_id', $user->id)->pluck('following_id');
+//          $users = User::where('visibility','private' )->get();
+//          $following_id =Follower::where('user_id', $user->id)->pluck('following_id');
     
-         $followerPosts = Post::whereIn('user_id', $following_id)->get();
+//          $followerPosts = Post::whereIn('user_id', $following_id)->get();
         
          
 
-if($followerPosts){
+// if($followerPosts){
     
-            return view('post.index', compact('posts','user','users','followerPosts'));
+//             return view('post.index', compact('posts','user','users','followerPosts'));
  
-        }else{
+//         }else{
             
-            return view('post.index', compact('posts','user','users'));
-}
+//             return view('post.index', compact('posts','user','users'));
+// }
 
-}
+// }
 
-if($sort=='newest'){
-    $posts = Post::withCount(['likes', 'comments'])
-    ->orderBy('created_at', 'desc')
-    ->paginate(10);
+// if($sort=='newest'){
+//     $posts = Post::withCount(['likes', 'comments'])
+//     ->orderBy('created_at', 'desc')
+//     ->paginate(10);
+// }
+// if($sort=='likeable'){
+//     $posts = Post::withCount(['likes', 'comments'])
+//     ->orderBy('likes_count', 'desc')
+//     ->paginate(10);
+// }
+// if($sort=='commentable'){
+//     $posts = Post::withCount(['likes', 'comments'])
+//     ->orderBy('comments_count', 'desc')
+//     ->paginate(10);
+// }
+// $users = User::where('visibility','private' )->get();
+// return view('post.index', compact('posts','users'));
+//         }}
+       $post_id = 1; 
+$post = Post::find($post_id);
+
+// Assuming $users is the collection of users who liked the post
+$users = User::whereLikedBy($post_id)->get();
+dd($users);
+    }
 }
-if($sort=='likeable'){
-    $posts = Post::withCount(['likes', 'comments'])
-    ->orderBy('likes_count', 'desc')
-    ->paginate(10);
-}
-if($sort=='commentable'){
-    $posts = Post::withCount(['likes', 'comments'])
-    ->orderBy('comments_count', 'desc')
-    ->paginate(10);
-}
-$users = User::where('visibility','private' )->get();
-return view('post.index', compact('posts','users'));
-        }}
-        
-    
                                                                                                                  

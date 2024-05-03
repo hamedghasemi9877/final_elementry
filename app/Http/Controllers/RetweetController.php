@@ -17,9 +17,6 @@ class RetweetController extends Controller{
        
         }
 
-
-
-
     public function retweet(Request $request, $post_id)
     {
 
@@ -38,7 +35,8 @@ class RetweetController extends Controller{
     $retweet->user_id = auth()->id();
     $retweet->post_id = $post->id;
     $retweet->save();
-
+    $post = Post::find($post_id);
+    $post->increment('retweet_count');
     
     return redirect()->back()->with('message', 'You have retweeted the post.');
 }

@@ -8,10 +8,10 @@
 
 @foreach ($users as $user1)
 
-<p1>{{$user1->name}}</p1> <form action="{{ route('follow',$user1->id) }}" method="POST">
+<p1>{{$user1->name}}<form action="{{ route('follow',$user1->id) }}" method="POST">
     @csrf
     <button type="submit">Follow</button>
-</form><hr> 
+</form></p1>  
 @endforeach 
 
 
@@ -153,13 +153,28 @@
                   </form>
           
          </td>
-         <td style="text-align:center">
+         <td>
            
            
-              <form action="{{ route('retweet.store', $post->id) }}" method="POST">
-                  @csrf
-                  <button type="submit" class="btn btn-primary">Retweet</button>
-                  </form>
+            <div class="container">
+                <div class="row justify-content-center">
+                    <div class="col-md-8">
+                        <div class="card">
+                            <div class="card-header">{{ __('Share or Retweet Post') }}</div>
+        
+                            <div class="card-body">
+                                <form action="{{ route('retweet.store',  $post->id) }}" method="POST">
+                                    @csrf
+        
+                                    <button type="submit" class="btn btn-primary">
+                                        {{ __('Share or Retweet') }}
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            
           
 </td>
                             </td>
