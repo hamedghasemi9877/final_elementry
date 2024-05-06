@@ -3,19 +3,26 @@
 @if(auth()->check())
 <div class="btn btn-info" style="float: right"><a href="{{ route('profile.index',$user->id)}}">your profile</a> </div><br><br>
 @endif
-<p style="background-color: darkgray"> follow users then you can see all of the posts</p>
+
+
+
+{{-- Suggestions --}}
+@auth
 <p1 style="background-color: rgb(195, 118, 134)">Suggestions for you:</p1><br>
 
-@foreach ($users as $user1)
-
+@foreach ($users1 as $user1)
+@if(auth()->user()->id!==$user1->id)
+@if(!$user1->isFollowing($user1->id))
 <p1>{{$user1->name}}<form action="{{ route('follow',$user1->id) }}" method="POST">
     @csrf
     <button type="submit">Follow</button>
-</form></p1>  
+</form></p1> 
+@endif 
+@endif 
 @endforeach 
+@endauth
 
-
-
+{{--  --}}
 
 
 <div class="container">

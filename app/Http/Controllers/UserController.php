@@ -24,4 +24,23 @@ class UserController extends Controller
         return back()->with('message', 'Post visibility updated successfully.');
     }
     
+    public function likedAccounts(User $user)
+    {
+        // Get the liked accounts for the specified user
+        $likedAccounts = $user->likedAccounts();
+
+        // Return the view with the liked accounts
+        return view('liked_accounts', compact('likedAccounts'));
+    }
+
+    public function commonFriends(User $user)
+    {
+        // Get the common friends for the specified user
+        $commonFriends = $user->commonFriends();
+
+        // Return the view with the common friends
+        return view('common_friends', compact('commonFriends'));
+    }
+
+
 }

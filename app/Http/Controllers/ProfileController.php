@@ -17,34 +17,29 @@ use App\Http\Requests\StoreProfileRequest;
 class ProfileController extends Controller
 {
 
-    public function __constract(){
-    
-        return $this->middleware('auth');
-       
-    } 
-  
-    public function index(User $user)
-    {
-
-       $user = auth()->user();
-        $following_id = Follower::where('user_id',$user->id)->first();
-        //  dd($following_id);
-        // $followerPosts = User::where('id', $following_id)->count(); 
+    public function index(User $user){
       
+        $following_id = Follower::where('user_id',$user->id)->first();
+   
         if($following_id ){
         $posts = $user->posts;
+        
+        //  dd($user->isfollowing($user->id));
         $users = User::where('visibility','public')->get();
+
            $visibility = $user->visibility;
 
-            return view('profile.index', compact('posts','user','users','visibility','following_id'));
-        }else{
-            $user = auth()->user();
+            return view('profile.index', compact('posts','user','users','visibility','following_id'));}
+            
+            else{
+
+            $user1 = auth()->user();
             $posts = $user->posts;
             $visibility = $user->visibility;
             $users = User::where('visibility','public')->get();
-return view('profile.index', compact('posts','user','users','visibility'));
-}
-    }
+
+return view('profile.index', compact('posts','user','user1','users','visibility'));
+}}
     
     public function create()
     {

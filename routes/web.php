@@ -25,7 +25,7 @@ Route::get('posts/{post}', [PostController::class, 'index'])->name('post.show');
 
 //related to Profile
 
-Route::get('profile/{user}', [ProfileController::class, 'index'])->middleware('auth')->name('profile.index');
+Route::get('profile/{user}', [ProfileController::class, 'index'])->name('profile.index');
 Route::get('posts', [ProfileController::class, 'create'])->name('post.create');
 Route::post('posts', [ProfileController::class, 'store'])->name('post.store');
 Route::get('posts/{post}/edit', [ProfileController::class,'edit'])->name('post.edit');

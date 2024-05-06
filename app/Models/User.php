@@ -7,13 +7,15 @@ use App\Models\Post;
 use App\Models\Report;
 use App\Models\Retweet;
 use App\Models\Follower;
+use Conner\Likeable\Like;
+use Conner\Likeable\Likeable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
 class User extends Authenticatable
 {
-    use HasFactory, Notifiable;
+    use HasFactory, Notifiable,Likeable;
 
     /**
      * The attributes that are mass assignable.
@@ -90,5 +92,6 @@ class User extends Authenticatable
         return $this->following()->where('following_id', $user_id)->exists();
     }
 
- 
+  
+  
 }
