@@ -24,23 +24,22 @@ class ProfileController extends Controller
         if($following_id ){
         $posts = $user->posts;
         
-        //  dd($user->isfollowing($user->id));
+             // all users with public status---------
         $users = User::where('visibility','public')->get();
 
+             // user visibility------------
            $visibility = $user->visibility;
 
-                   //  followings
+                   // followings-------
         $followings_id = $user->followers->pluck('following_id');
-
-                   // followers
+        $followingNames = User::whereIn('id', $followings_id)->pluck('name')->toArray();
+        $followingNames = collect($followingNames);
+                   // followers--------
           $followers_id = $user->following->pluck('user_id');
           $followerNames = User::whereIn('id', $followers_id)->pluck('name')->toArray();
-
-          // Determine the users who are mutually following each other(BEST FRIENDS)
-           $sharedFollowingIds = $followings_id->intersect($followers_id);
-
-
-            return view('profile.index', compact('posts','user','users','visibility','following_id','followerNames','sharedFollowingIds'));}
+          $followerNames = collect($followerNames);
+        
+            return view('profile.index', compact('posts','user','users','visibility','followingNames','followerNames'));}
             
             else{
 
@@ -48,8 +47,14 @@ class ProfileController extends Controller
             $posts = $user->posts;
             $visibility = $user->visibility;
             $users = User::where('visibility','public')->get();
+                              //  followings
+        $followings_id = $user->followers->pluck('following_id');
 
-return view('profile.index', compact('posts','user','user1','users','visibility'));
+        // followers
+$followers_id = $user->following->pluck('user_id');
+$followerNames = User::whereIn('id', $followers_id)->pluck('name')->toArray();
+
+return view('profile.index', compact('posts','user','user1','users','visibility','followerNames'));
 }}
     
     public function create()

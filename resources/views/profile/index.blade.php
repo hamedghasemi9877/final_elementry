@@ -11,64 +11,84 @@
   {{ session('error') }}
 </div>
 @endif
-{{-- BEST FRIENDS --}}
-@if($followerNames==true)
-best freinds for you:
+{{-- information of owner and permission status --}}
+@guest
+<h1 style="background-color: chartreuse">welcome to page of:<u>{{$user->name}}</u></h1><br>
+@endguest
+@if(auth()->check()&& auth()->user()->id!==$user->id)
+<h1 style="background-color: chartreuse">welcome to page of:<u>{{$user->name}}</u></h1><br>
+@endif
+
+@if(auth()->check()&& auth()->user()->id===$user->id)
+<h1 style="background-color: chartreuse">welcome:<u>{{$user->name}}</u></h1><br>
+         <div>
+                 <form action="{{ route('users.visibility.update', $user->id) }}" method="POST">
+                     @csrf
+                     <input type="hidden" name="post_id" 
+                         
+                     value="{{$user->id}}">
+                     <label for="visibility">Visibility:</label>
+                     <select name="visibility" id="visibility">
+                         <option value="public">Public</option>
+                         <option value="private">Private</option>
+                     </select>
+                     <button type="submit">change</button>
+                 </form>
+                 <p style="color: blue">You are only allowed to change your status</p>
+         </div>
+         
+    @endif
+
+{{-- follow status --}}
+@if(auth()->check()&& auth()->user()->id===$user->id)
+
+<h1 style="background-color: rgb(36, 217, 202)">your followings:{{$followingNames->count()}}</h1> 
+@foreach($followingNames as $name)
+    <u>{{ $name }}</u><br>
+@endforeach<hr>
+<h1 style="background-color: rgb(36, 217, 202)">your followers:{{$followerNames->count()}}</h1>
 @foreach($followerNames as $name)
-    <p>{{ $name }}</p>
+    <u>{{ $name }}</u><br>
 @endforeach
+
 
 @endif
 {{--  --}}
 
-{{-- information of owner and permission status --}}
 
-       <h1 style="background-color: chartreuse">welcome to page of:<u>{{$user->name}}</u></h1><br>
-
-       @if(auth()->check()&& auth()->user()->id===$user->id)
-
-                <div>
-                        <form action="{{ route('users.visibility.update', $user->id) }}" method="POST">
-                            @csrf
-                            <input type="hidden" name="post_id" 
-                                
-                            value="{{$user->id}}">
-                            <label for="visibility">Visibility:</label>
-                            <select name="visibility" id="visibility">
-                                <option value="public">Public</option>
-                                <option value="private">Private</option>
-                            </select>
-                            <button type="submit">change</button>
-                        </form>
-                        <p style="color: blue">You are only allowed to change your status</p>
-                </div>
-                
-           @endif
            
        <h2 style="color: blue"><img src="https://cdn-icons-png.flaticon.com/128/11079/11079218.png" loading="lazy" alt="Privacy " title="Privacy " width="64" height="64"><u>{{$visibility}}</u></h2> 
 @guest
        <a href="" class="btn btn-success" style="float: left">FOLLOW</a>
 @endguest
+
        <a href="/" class="btn btn-info" style="float: left">home</a><br><br>
  @if(auth()->check()&& auth()->user()->id===$user->id)
        <a href="{{ route('post.create') }}" class="btn btn-success" style="font-size:30px">NewTweet</a>
 @endif
-@if($user->visibility == 'private')
-  @if(auth()->check()&& auth()->user()->id!==$user->id)
-    @if(!$user->isFollowing($user->id))
-        <form action="{{ route('follow',$user->id) }}" method="POST">
-            @csrf
-            <button type="submit">Follow</button>
-        </form>
-    @else
-        <form action="{{ route('unfollow',$user->id) }}" method="POST">
-            @csrf
-            @method('DELETE')
-            <button type="submit">Unfollow</button>
-        </form>
-       @endif
-    @endif
-@endif
+
+    @auth
+        @if(auth()->user()->id !== $user->id)
+            @if((auth()->user())->Following($user->id))
+                <form action="{{ route('follow', $user->id) }}" method="POST">
+                    @csrf
+                    <button type="submit">Follow</button>
+                </form>
+            @endif
+            @endif
+            
+            @if(auth()->user()->id !== $user->id)
+            @if(((auth()->user())->Following($user->id)))
+                <form action="{{ route('unfollow', $user->id) }}" method="POST">
+                    @csrf
+                    @method('DELETE')
+                    <button type="submit">Unfollow</button>
+                </form>
+               
+        @endif
+        @endif
+    @endauth
+
 {{--  --}}
 
 <div class="container">

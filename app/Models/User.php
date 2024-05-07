@@ -93,5 +93,18 @@ class User extends Authenticatable
     }
 
   
+    public function findCommonFollowingsWithUsers( $otherUsers)
+{
+    $commonFollowings = [];
+
+        foreach ($otherUsers as $otherUser) {
+            $otherFollowings = $otherUser->following->pluck('following_id');
+            $commonFollowings[] = $this->following->pluck('following_id')->intersect($otherFollowings)->all();
+        }
+
+        $mergedCommonFollowings = array_merge(...$commonFollowings);
+
+        return self::whereIn('id', $mergedCommonFollowings)->get();
+    }
   
 }

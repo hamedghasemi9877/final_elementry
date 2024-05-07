@@ -6,20 +6,40 @@
 
 
 
-{{-- Suggestions --}}
+{{-- Suggestions with follow --}}
 @auth
-<p1 style="background-color: rgb(195, 118, 134)">Suggestions for you:</p1><br>
 
-@foreach ($users1 as $user1)
+@if ($suggestedUsers->isNotEmpty())
+    <h2>Suggested Users to Follow with <u> follow</u> system:</h2>
+    @foreach($suggestedUsers as $suggestedUser)
+
+    @if(auth()->user()->id!==$suggestedUser->id)
+            <p1>{{$suggestedUser->name}}<form action="{{ route('follow',$suggestedUser->id) }}" method="POST">
+                @csrf
+                <button type="submit">Follow</button>
+            </form></p1> 
+    
+    @endif
+    @endforeach
+
+@endif
+{{-- Suggestions with like --}}
+@if ($users1->isNotEmpty())
+<h2>Suggested Users to Follow with <u> like</u> system:</h2>
+
+@foreach($users1 as $user1)
+
 @if(auth()->user()->id!==$user1->id)
-@if(!$user1->isFollowing($user1->id))
-<p1>{{$user1->name}}<form action="{{ route('follow',$user1->id) }}" method="POST">
-    @csrf
-    <button type="submit">Follow</button>
-</form></p1> 
-@endif 
-@endif 
-@endforeach 
+
+        <p1>{{$user1->name}}<form action="{{ route('follow',$user1->id) }}" method="POST">
+            @csrf
+            <button type="submit">Follow</button>
+        </form></p1> 
+
+@endif
+@endforeach
+@endif
+
 @endauth
 
 {{--  --}}
