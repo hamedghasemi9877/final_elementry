@@ -29,7 +29,18 @@ class ProfileController extends Controller
 
            $visibility = $user->visibility;
 
-            return view('profile.index', compact('posts','user','users','visibility','following_id'));}
+                   //  followings
+        $followings_id = $user->followers->pluck('following_id');
+
+                   // followers
+          $followers_id = $user->following->pluck('user_id');
+          $followerNames = User::whereIn('id', $followers_id)->pluck('name')->toArray();
+
+          // Determine the users who are mutually following each other(BEST FRIENDS)
+           $sharedFollowingIds = $followings_id->intersect($followers_id);
+
+
+            return view('profile.index', compact('posts','user','users','visibility','following_id','followerNames','sharedFollowingIds'));}
             
             else{
 

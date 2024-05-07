@@ -37,10 +37,24 @@ class PostController extends Controller{
           }
         
           $users = User::where('visibility','private' )->get();
-          $following_id =Follower::where('user_id', $user->id)->pluck('following_id');
-        
-          $followerPosts = Post::whereIn('user_id', $following_id)->get();
-         
+          
+        //  followings
+          $followings_id = $user->followers->pluck('following_id');
+        //   or=>$following_id =Follower::where('user_id', $user->id)->pluck('following_id');
+       
+
+          $userIds = $request->input('user_ids', []);
+          if (empty($userIds)) {
+            $userIds[] = Auth::id();
+        }
+        foreach ($userIds as $userId) {
+            // Retrieve the user based on the current ID
+            $user2 = User::findOrFail($userId);
+        }
+        //  } dd($user2);
+          $followerPosts = Post::whereIn('user_id', $followings_id)->get();
+
+
 
         // the posts that user like them
         $postslikes = Like::where('user_id',$user->id)->pluck('likeable_id');

@@ -11,6 +11,15 @@
   {{ session('error') }}
 </div>
 @endif
+{{-- BEST FRIENDS --}}
+@if($followerNames==true)
+best freinds for you:
+@foreach($followerNames as $name)
+    <p>{{ $name }}</p>
+@endforeach
+
+@endif
+{{--  --}}
 
 {{-- information of owner and permission status --}}
 
@@ -61,7 +70,6 @@
     @endif
 @endif
 {{--  --}}
-
 
 <div class="container">
     <div class="row justify-content-center">
