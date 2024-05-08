@@ -6,6 +6,7 @@ use Carbon\Carbon;
 use App\Models\Post;
 use App\Models\User;
 use App\Models\Comment;
+use App\Models\Hashtag;
 use App\Models\Follower;
 use Conner\Likeable\Like;
 use Illuminate\Http\Request;
@@ -59,12 +60,13 @@ return view('profile.index', compact('posts','user','user1','users','visibility'
     
     public function create()
     {
-        return view('post.create');
+        $hashtags = Hashtag::all();
+        return view('post.create',compact('hashtags'));
     }
 
     public function store(StoreProfileRequest  $request)
     {
-        
+      
         $imagePath = $request->file('image') ? Storage::putFile('images', $request->file('image')) : null;
         $videoPath = $request->file('video') ? Storage::putFile('videos', $request->file('video')) : null;
        
@@ -115,7 +117,15 @@ return view('profile.index', compact('posts','user','user1','users','visibility'
         $post['user_id'] = auth()->user()->id;
       
         $post->save();
-        
+        // Extract hashtags from the input
+    $hashtags = explode(',', $request->input('name'));
+
+    // Save each hashtag to the database and associate with the post
+    foreach ($hashtags as $tag) {
+        $tag = trim($tag); // Remove any leading/trailing spaces
+        $hashtag = Hashtag::firstOrCreate(['name' => $tag]);
+        $post->hashtags()->attach($hashtag);
+    }
         
         return redirect('/')->with('message','A new tweet has been registered');
     }

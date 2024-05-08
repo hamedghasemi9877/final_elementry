@@ -23,10 +23,10 @@
                             <textarea name="body" rows="10" cols="30" class="form-control" required></textarea>
                            
                         </div>
-
-                        {{-- add image & video --}}
-                        
-                        {{--  --}}
+                        <div class="form-group">
+                            <label class="label">Hashtags: </label>
+                            <input type="text" name="name" class="form-control" placeholder="Enter hashtags separated by commas"/>
+                        </div>
                         <div class="form-group">
                             <input type="submit" class="btn btn-success" />
                         </div>

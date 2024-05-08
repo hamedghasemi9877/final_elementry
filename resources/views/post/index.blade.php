@@ -5,7 +5,7 @@
 @endif
 
 
-
+{{-- @include('hashtag.create') --}}
 {{-- Suggestions with follow --}}
 @auth
 

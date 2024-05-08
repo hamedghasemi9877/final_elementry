@@ -10,6 +10,7 @@ use App\Http\Controllers\CommentController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\RetweetController;
 use App\Http\Controllers\FollowerController;
+use App\Http\Controllers\HashtagController;
 
 
 Auth::routes();
@@ -66,3 +67,16 @@ Route::delete('unfollow/{user}', [FollowerController::class, 'unfollow'])->middl
 Route::post('users/{user}/visibility/update', [UserController::class, 'Visibility'])->name('users.visibility.update');
 
 //---------------------------------------------------------------------------------------------------------------------
+
+// related to hashtag
+
+Route::get('/hashtags/create', [HashtagController::class, 'create'])->name('hashtags.create');
+
+Route::post('/hashtags', [HashtagController::class, 'store'])->name('hashtags.store');
+
+Route::get('/hashtags/{hashtag}', [HashtagController::class, 'show'])->name('hashtags.show');
+
+Route::get('/hashtags/search', [HashtagController::class, 'search'])->name('hashtags.search');
+
+
+

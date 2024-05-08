@@ -16,7 +16,7 @@ class PostController extends Controller{
 
    
 
-     public function index(Request $request, $sort='newest') {
+     public function index(User $user, $sort='newest') {
 
         $user = auth()->user();
         // just for users that authenticated-----------
@@ -141,6 +141,10 @@ $suggestedUsers = User::whereIn('id', $suggestedUsers)->get();
  }
 
  $users = User::where('visibility','public' )->get();
+if($users){
+  return view('post.index', compact('posts','users'));
 
- return view('post.index', compact('posts','users'));
+}
+// If the database was empty
+return view('post.index');
          }}
