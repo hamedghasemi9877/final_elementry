@@ -6,6 +6,7 @@ use App\Models\Like;
 use App\Models\User;
 use App\Models\Report;
 use App\Models\Comment;
+use App\Models\Hashtag;
 use App\Models\Retweet;
 use Conner\Likeable\Likeable;
 use Illuminate\Support\Collection;
@@ -13,6 +14,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Contracts\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Post extends Model
 {
@@ -55,4 +57,11 @@ class Post extends Model
         return $this->hasMany(Retweet::class);
     }
   
+
+// many to many relation
+    public function hashtags():BelongsToMany
+    
+    {
+        return $this->belongsToMany(Hashtag::class);  
+    }
 }
