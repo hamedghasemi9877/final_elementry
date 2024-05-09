@@ -20,26 +20,28 @@ class CommentController extends Controller
 
     public function store(StoreCommentRequest $request)
     { 
-    
-  if(Auth::check()){ 
- 
-  
-      $com = Comment::create([
-        'user_id' =>auth()->user()->id,
-        'post_id' =>$request->post_id,
-       'body' =>$request->body
-      ]);
       
-        return redirect('/')->with('message','Your Idea Submited!');
-      }
-        else
-
-        {
-
-          return  redirect(route('login'))->with('error','first log in!!!!');
-
-        }
-    }
+      if(Auth::check()){ 
+       
+        $data = Post::where('id',$request->post_id)->first();
+        
+            Comment::create([
+              'user_id' =>auth()->user()->id,
+              'post_id' =>$data->id,
+             'body' =>$request->body
+            ]);
+            
+              return redirect()->back()->with('message','Your Idea Submited!');
+            }
+              else
+      
+              {
+      
+                return  redirect(route('login'))->with('error','first log in!!!!');
+      
+              }
+          }
+      
 
 
 

@@ -22,7 +22,10 @@ class ReportController extends Controller{
     {
         
         $post = Post::find($post_id);
-      
+       
+      if(auth()->user()->id==$post->user_id){
+        return redirect()->back()->with('error','The post belongs to you. Impossible');
+      }else{
         $data = $post->reports()->where('user_id', auth()->id());
         // checking that user can once reporting post not more
         if ($data->exists()) {
@@ -44,6 +47,8 @@ class ReportController extends Controller{
         }
     
         return redirect()->back()->with('message','Post reported successfully');
-    }}
-    
+    }
+    }
+}
+
 
