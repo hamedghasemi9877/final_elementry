@@ -8,9 +8,9 @@
 {{-- @include('hashtag.create') --}}
 {{-- Suggestions with follow --}}
 @auth
-
+<p1>Suggested Users to Follow with <u> follow</u> system:</p1><br>
 @if ($suggestedUsers->isNotEmpty())
-    <h2>Suggested Users to Follow with <u> follow</u> system:</h2>
+  
     @foreach($suggestedUsers as $suggestedUser)
 
     @if(auth()->user()->id!==$suggestedUser->id)
@@ -23,13 +23,15 @@
     @endforeach
 
 @endif
+<hr>
 {{-- Suggestions with like --}}
-@if ($users1->isNotEmpty())
-<h2>Suggested Users to Follow with <u> like</u> system:</h2>
+
+<p1>Suggested Users to Follow with <u> like</u> system:</p1><br>
 
 @foreach($users1 as $user1)
 
-@if(auth()->user()->id!==$user1->id)
+@if(!($user->isfollowing($user1->id)))
+
 
         <p1>{{$user1->name}}<form action="{{ route('follow',$user1->id) }}" method="POST">
             @csrf
@@ -38,10 +40,11 @@
 
 @endif
 @endforeach
-@endif
+
+
 
 @endauth
-
+<hr>
 {{--  --}}
 
 
@@ -50,7 +53,7 @@
         <div class="col-md-12">
          
             
-            <h class="btn btn-info">The posts of public users and your followers</h> 
+           
            
                 <!-- Sorted posts -->
             
@@ -185,24 +188,22 @@
            
             <div class="container">
                 <div class="row justify-content-center">
-                    <div class="col-md-8">
-                        <div class="card">
-                            <div class="card-header">{{ __('Share or Retweet Post') }}</div>
-        
-                            <div class="card-body">
+                    <div style="text-align: center">
+                      
+                     
+                            
                                 <form action="{{ route('retweet.store',  $post->id) }}" method="POST">
                                     @csrf
         
                                     <button type="submit" class="btn btn-primary">
-                                        {{ __('Share or Retweet') }}
+                                        {{ __('Retweet') }}
                                     </button>
                                 </form>
-                            </div>
-                        </div>
+                            
+                      
                     </div>
                 </div>
-            
-          
+               
 </td>
                             </td>
                         
@@ -244,7 +245,7 @@
     </div>
 </div>
 @auth
-<h2>posts of your Followings:</h2>
+<h2>posts of your Followings(private pages):</h2>
 
     
     <table class="table table-bordered">
@@ -267,8 +268,11 @@
         </thead>
         <tbody>
           @if(auth()->check())
-        @foreach ($followerPosts as $post)
-       
+    
+
+          @foreach ($PostsPrivateUsers as $post)
+          {{-- @dd(auth()->user()->isfollowing($post->user_id)) --}}
+          @if(auth()->user()->isfollowing($post->user_id))
        
         <tr>
            
@@ -373,8 +377,11 @@
       
       
      
-      
+         @endif
         @endforeach
+
+
+
  @endif
         </tbody>
 

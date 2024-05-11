@@ -20,43 +20,31 @@ class ProfileController extends Controller
 
     public function index(User $user){
       
-        $following_id = Follower::where('user_id',$user->id)->first();
-   
-        if($following_id ){
-        $posts = $user->posts;
-        
-             // all users with public status---------
+      
+          $posts = $user->posts()->withCount(['likes', 'comments'])->get();
+                   // or
+         // $posts = Post::withCount(['likes', 'comments'])->where('user_id',$user->id)->get();
+       
+
+                   // all users with public status---------
         $users = User::where('visibility','public')->get();
 
-             // user visibility------------
+                   // user visibility------------
            $visibility = $user->visibility;
 
                    // followings-------
-        $followings_id = $user->followers->pluck('following_id');
+        $followings_id = $user->following->pluck('following_id');
         $followingNames = User::whereIn('id', $followings_id)->pluck('name')->toArray();
         $followingNames = collect($followingNames);
+        
                    // followers--------
-          $followers_id = $user->following->pluck('user_id');
+          $followers_id = $user->followers->pluck('user_id');
           $followerNames = User::whereIn('id', $followers_id)->pluck('name')->toArray();
           $followerNames = collect($followerNames);
         
-            return view('profile.index', compact('posts','user','users','visibility','followingNames','followerNames'));}
-            
-            else{
+            return view('profile.index', compact('posts','user','users','visibility','followingNames','followerNames'));
+        }
 
-            $user1 = auth()->user();
-            $posts = $user->posts;
-            $visibility = $user->visibility;
-            $users = User::where('visibility','public')->get();
-                              //  followings
-        $followings_id = $user->followers->pluck('following_id');
-
-        // followers
-$followers_id = $user->following->pluck('user_id');
-$followerNames = User::whereIn('id', $followers_id)->pluck('name')->toArray();
-
-return view('profile.index', compact('posts','user','user1','users','visibility','followerNames'));
-}}
     
     public function create()
     {
@@ -66,7 +54,7 @@ return view('profile.index', compact('posts','user','user1','users','visibility'
 
     public function store(StoreProfileRequest  $request)
     {
-      
+
         $imagePath = $request->file('image') ? Storage::putFile('images', $request->file('image')) : null;
         $videoPath = $request->file('video') ? Storage::putFile('videos', $request->file('video')) : null;
        

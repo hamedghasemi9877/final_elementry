@@ -24,21 +24,25 @@ class PostController extends Controller{
           if($sort=='newest'){
               $posts = Post::withCount(['likes', 'comments'])
               ->orderBy('created_at', 'desc')
-              ->paginate(10);
+              ->get();
           }
           if($sort=='likeable'){
              $posts = Post::withCount(['likes', 'comments'])
               ->orderBy('likes_count', 'desc')
-              ->paginate(10);
+              ->get();
           }
           if($sort=='commentable'){
             $posts = Post::withCount(['likes', 'comments'])
              ->orderBy('comments_count', 'desc')
-             ->paginate(10);
+             ->get();
           }
-        //   PrivateUsers------------
-          $PrivateUsers = User::where('visibility','private' )->get();
 
+        //  the posts of PrivateUsers------------
+          $PostsPrivateUsers = Post::whereIn('user_id',function ($query){
+            $query->select('id')->from('users')->where('visibility','private');
+          })
+        ->get();
+                   // dd($PostsPrivateUsers);
 
         //   PublicUsers-------------
           $PublicUsers  = User::where('visibility','public' )->get();
@@ -46,25 +50,68 @@ class PostController extends Controller{
 
        
         // implement users with same following_id------------
-        $userIdsWithSameFollowingId = Follower::selectRaw('GROUP_CONCAT(user_id) as user_ids')
+        $user_idsWithSameFollowing_id = Follower::selectRaw('GROUP_CONCAT(user_id) as user_ids')
         ->groupBy('following_id')
         ->havingRaw('COUNT(*) > 1')
         ->pluck('user_ids');
-        $usersWithSameFollowingId = User::whereIn('id', $userIdsWithSameFollowingId)->get();
+        $usersWithSameFollowingId = User::whereIn('id', $user_idsWithSameFollowing_id)->get();
 
 
-        // user followers--------
-        $followers_id = $user->following->pluck('user_id');
+        // user followings--------
+        $following_id = $user->following->pluck('following_id');
 
-        //  user followings---------------
-        $followings_id = $user->followers->pluck('following_id');
-        //   or=>$following_id =Follower::where('user_id', $user->id)->pluck('following_id');
-          
-
-
+ 
         // the post of followings-----------
-        $followerPosts = Post::whereIn('user_id', $followings_id)->get();
+        
+        $followingPosts = Post::whereIn('user_id', $following_id)->get();
          
+
+
+
+
+        /*------------------------------
+        if A follow B & B follow C
+        suggestion to A that follow C
+
+      
+        so... 
+
+
+        we need find folowings of user-----
+        */
+     
+
+      //1: first find followings of user:
+    $followingUserId = $user->following->pluck('following_id')->toArray();
+
+
+      //suggestion tank
+    $suggestions = [];
+
+      //find the followings of the following
+    foreach ($followingUserId as $followingId) {
+        
+      //all of the followings of userFollowings
+        $followingfollowingUser = User::find($followingId)->following()->pluck('following_id')->toArray();
+
+   
+        //ids that exist in followingUserId but not exist in followersfollowingUser
+        $suggestedUsers = array_diff($followingfollowingUser, $followingUserId);
+    
+        $suggestions = array_merge($suggestions, $suggestedUsers);
+        
+}
+
+//no dublicate
+$suggestions = array_unique($suggestions);
+
+//remove owner user
+$suggestions = array_diff($suggestions, [$user->id]);
+
+
+$suggestedUsers = User::whereIn('id', $suggestions)->get();
+
+
 
         // Suggested Users to Follow with like system:
         // the ids of posts that user like them------------
@@ -77,49 +124,18 @@ class PostController extends Controller{
 
         // owners---------
         $users1= User::whereIn('id',$likedOwners)->get();
-
-
-        /*------------------------------
-        if A follow B & B follow C
-        suggestion to A that follow C
-        */
-     
-      // Suggested Users to Follow with follow system:
-$followingsSuggest = $user->followers->pluck('following_id');
-$suggestedUsers = [];
-
-foreach ($followingsSuggest as $followingId) {
-    // Retrieve the user object corresponding to the following_id
-    $followingUser = User::find($followingId);
-
-    // Check if the user exists and has followers
-    if ($followingUser && $followingUser->followers->isNotEmpty()) {
-        // Retrieve the following_ids of the followers of the following user
-        $followersOfFollowingUser = $followingUser->followers->pluck('following_id')->toArray();
-
-        // Add the following_ids of the followers of the following user to the suggested users array
-        $suggestedUsers = array_merge($suggestedUsers, $followersOfFollowingUser);
-    }
-}
-
-// Remove duplicates and the user's own id from the suggested users array
-$suggestedUsers = array_diff(array_unique($suggestedUsers), [$user->id]);
-
-// Retrieve the user objects corresponding to the suggested user ids
-$suggestedUsers = User::whereIn('id', $suggestedUsers)->get();
-
-
+ 
 
         // If the following user has a post
-   if($followerPosts){
+   if($followingPosts  ){
     
-       return view('post.index', compact('posts','user','followings_id','PrivateUsers','PublicUsers','followerPosts','users1','usersWithSameFollowingId','suggestedUsers'));}
+       return view('post.index', compact('posts','user','following_id','PostsPrivateUsers','PublicUsers','followingPosts','users1','usersWithSameFollowingId','suggestedUsers'));}
    
    
      else{// If the following user doesnt have a post
            
         
-       return view('post.index', compact('posts','user','users','users1'));
+       return view('post.index', compact('posts','user','users','PublicUsers','users1','suggestedUsers','followingPosts'));
  }
         }
  

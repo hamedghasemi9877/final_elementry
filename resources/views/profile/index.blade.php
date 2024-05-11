@@ -11,35 +11,23 @@
   {{ session('error') }}
 </div>
 @endif
-{{-- information of owner and permission status --}}
+
 @guest
 <h1 style="background-color: chartreuse">welcome to page of:<u>{{$user->name}}</u></h1><br>
 @endguest
 @if(auth()->check()&& auth()->user()->id!==$user->id)
+@if($user->visibility=='private')
+<p style="background-color: rgb(231, 90, 118)">you should first follow then you can see  tweets in the home page </p> 
+@endif
 <h1 style="background-color: chartreuse">welcome to page of:<u>{{$user->name}}</u></h1><br>
 @endif
 
 @if(auth()->check()&& auth()->user()->id===$user->id)
 <h1 style="background-color: chartreuse">welcome:<u>{{$user->name}}</u></h1><br>
-         <div>
-                 <form action="{{ route('users.visibility.update', $user->id) }}" method="POST">
-                     @csrf
-                     <input type="hidden" name="post_id" 
-                         
-                     value="{{$user->id}}">
-                     <label for="visibility">Visibility:</label>
-                     <select name="visibility" id="visibility">
-                         <option value="public">Public</option>
-                         <option value="private">Private</option>
-                     </select>
-                     <button type="submit">change</button>
-                 </form>
-                 <p style="color: blue">You are only allowed to change your status</p>
-         </div>
          
     @endif
 
-{{-- follow status --}}
+{{-- information of owner and permission status --}}
 @if(auth()->check()&& auth()->user()->id===$user->id)
 
 <h1 style="background-color: rgb(36, 217, 202)">your followings:{{$followingNames->count()}}</h1> 
@@ -51,12 +39,8 @@
     <u>{{ $name }}</u><br>
 @endforeach
 
-
 @endif
-{{--  --}}
-
-
-           
+        
        <h2 style="color: blue"><img src="https://cdn-icons-png.flaticon.com/128/11079/11079218.png" loading="lazy" alt="Privacy " title="Privacy " width="64" height="64"><u>{{$visibility}}</u></h2> 
 @guest
        <a href="" class="btn btn-success" style="float: left">FOLLOW</a>
@@ -64,12 +48,36 @@
 
        <a href="/" class="btn btn-info" style="float: left">home</a><br><br>
  @if(auth()->check()&& auth()->user()->id===$user->id)
+ <div>
+    <form action="{{ route('users.visibility.update', $user->id) }}" method="POST">
+        @csrf
+        <input type="hidden" name="post_id" 
+            
+        value="{{$user->id}}">
+        <label for="visibility">Visibility:</label>
+        <select name="visibility" id="visibility" value="{{$user->visibility}}">
+            <option value="public">Public</option>
+            <option value="private">Private</option>
+        </select>
+        <button type="submit">change</button>
+    </form>
+    <p style="color: blue">You are only allowed to change your status</p>
+</div>
+
+ @if($user->visibility=='private')
+<p style="background-color: crimson"> No one on the public page can see your tweets  </p> 
+@endif
+ @if($user->visibility=='public')
+<p style="background-color: rgb(27, 220, 20)"> all people on the public page can see your tweets  </p> 
+@endif
        <a href="{{ route('post.create') }}" class="btn btn-success" style="font-size:30px">NewTweet</a>
 @endif
+{{--  --}}
+
 
     @auth
         @if(auth()->user()->id !== $user->id)
-            @if((auth()->user())->Following($user->id))
+            @if(!(auth()->user()->isFollowing($user->id)))
                 <form action="{{ route('follow', $user->id) }}" method="POST">
                     @csrf
                     <button type="submit">Follow</button>
@@ -78,7 +86,7 @@
             @endif
             
             @if(auth()->user()->id !== $user->id)
-            @if(((auth()->user())->Following($user->id)))
+            @if((auth()->user()->isFollowing($user->id)))
                 <form action="{{ route('unfollow', $user->id) }}" method="POST">
                     @csrf
                     @method('DELETE')
@@ -194,25 +202,7 @@
         </div>
     </div>
 </div>
-{{-- @foreach ($users as $user)
-<tr>
-    <td> TotalPosts:{{ $user->posts_count }}</td><br>
-    <td class="text-center">Total Comments{{ $user->comments_count }}</td>
-</tr>
-@endforeach --}}
 
-
-
- 
-{{-- 
-    <h2>Followers<h2>Followers Count: {{ $followers->count() }}</h2></h2>
-    <ul>
-        @foreach($followers as $follower)
-            <li>{{ $follower->name }}</li>
-        @endforeach
-    </ul> --}}
-
-    
 @endsection
 
 

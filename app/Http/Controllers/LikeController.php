@@ -10,7 +10,7 @@ class LikeController extends Controller
     public function likePost($id)
     {
         $post = Post::find($id);
-        if(auth()->user()!=$post->user_id){
+        if(auth()->user()->id!=$post->user_id){
         $post->like();
         $post->save();
 
