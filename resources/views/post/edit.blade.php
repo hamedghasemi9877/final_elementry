@@ -15,6 +15,7 @@
 		<label class="label">Title: </label>
 		<input type="text" name="title" class="form-control" value="{{$post->title}}" required/>
 	</div>
+
 	<div class="form-group">
 		<label class="label">Your text: </label>
 		<input type="text" name="body" class="form-control" value="{{$post->body}}" required/>

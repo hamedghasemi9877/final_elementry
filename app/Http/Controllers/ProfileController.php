@@ -52,8 +52,8 @@ class ProfileController extends Controller
         return view('post.create',compact('hashtags'));
     }
 
-    public function store(StoreProfileRequest  $request)
-    {
+    public function store(StoreProfileRequest  $request){
+
 
         $imagePath = $request->file('image') ? Storage::putFile('images', $request->file('image')) : null;
         $videoPath = $request->file('video') ? Storage::putFile('videos', $request->file('video')) : null;
@@ -108,12 +108,14 @@ class ProfileController extends Controller
         // Extract hashtags from the input
     $hashtags = explode(',', $request->input('name'));
 
-    // Save each hashtag to the database and associate with the post
+    // Save each hashtag to the database 
     foreach ($hashtags as $tag) {
-        $tag = trim($tag); // Remove any leading/trailing spaces
-        $hashtag = Hashtag::firstOrCreate(['name' => $tag]);
+        $tag = trim($tag); 
+        if ($tag !== '') {
+        $hashtag = Hashtag::Create(['name' => $tag]);
+        // related to pivot table
         $post->hashtags()->attach($hashtag);
-    }
+    }}
         
         return redirect('/')->with('message','A new tweet has been registered');
     }

@@ -20,18 +20,18 @@ Auth::routes();
 
 Route::get('/', [PostController::class, 'index'])->name('index');
 Route::get('/posts/sort/{sort}', [PostController::class, 'index'])->name('posts.sort');
-Route::get('posts/{post}', [PostController::class, 'index'])->name('post.show');
+Route::get('search', [PostController::class, 'search'])->name('hashtag.search');
 //---------------------------------------------------------------------------------------------------------------------
 
 
 //related to Profile
 
 Route::get('profile/{user}', [ProfileController::class, 'index'])->name('profile.index');
-Route::get('posts', [ProfileController::class, 'create'])->name('post.create');
-Route::post('posts', [ProfileController::class, 'store'])->name('post.store');
-Route::get('posts/{post}/edit', [ProfileController::class,'edit'])->name('post.edit');
-Route::put('posts/{post}/update', [ProfileController::class, 'update'])->name('post.update');
-Route::delete('posts/{post}/delete', [ProfileController::class, 'destroy'])->name('post.destroy');
+Route::get('posts', [ProfileController::class, 'create'])->middleware('auth')->name('post.create');
+Route::post('posts', [ProfileController::class, 'store'])->middleware('auth')->name('post.store');
+Route::get('posts/{post}/edit', [ProfileController::class,'edit'])->middleware('auth')->name('post.edit');
+Route::put('posts/{post}/update', [ProfileController::class, 'update'])->middleware('auth')->name('post.update');
+Route::delete('posts/{post}/delete', [ProfileController::class, 'destroy'])->middleware('auth')->name('post.destroy');
 //---------------------------------------------------------------------------------------------------------------------
 
 
@@ -53,7 +53,6 @@ Route::post('/report-post/{post_id}', [ReportController::class,'reportpost'])->m
 //---------------------------------------------------------------------------------------------------------------------
 
 //related to Retweet
-
 Route::post('/posts/{post_id}/retweet', [RetweetController::class, 'retweet'])->middleware('auth')->name('retweet.store');
 Route::delete('/retweets/{id}', [RetweetController::class, 'delete'])->middleware('auth')->name('retweet.delete');
 //---------------------------------------------------------------------------------------------------------------------
@@ -63,20 +62,11 @@ Route::post('follow/{user}', [FollowerController::class, 'follow'])->middleware(
 Route::delete('unfollow/{user}', [FollowerController::class, 'unfollow'])->middleware('auth')->name('unfollow');
 //---------------------------------------------------------------------------------------------------------------------
 
-//related to user
-Route::post('users/{user}/visibility/update', [UserController::class, 'Visibility'])->name('users.visibility.update');
+//related to user visibility
+Route::post('users/{user}/visibility/update', [UserController::class, 'Visibility'])->middleware('auth')->name('users.visibility.update');
 
 //---------------------------------------------------------------------------------------------------------------------
 
-// related to hashtag
-
-Route::get('/hashtags/create', [HashtagController::class, 'create'])->name('hashtags.create');
-
-Route::post('/hashtags', [HashtagController::class, 'store'])->name('hashtags.store');
-
-Route::get('/hashtags/{hashtag}', [HashtagController::class, 'show'])->name('hashtags.show');
-
-Route::get('/hashtags/search', [HashtagController::class, 'search'])->name('hashtags.search');
 
 
 

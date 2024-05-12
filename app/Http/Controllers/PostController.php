@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Post;
 use App\Models\User;
 use App\Models\Comment;
+use App\Models\Hashtag;
 use App\Models\Follower;
 use Conner\Likeable\Like;
 use Illuminate\Http\Request;
@@ -124,18 +125,29 @@ $suggestedUsers = User::whereIn('id', $suggestions)->get();
 
         // owners---------
         $users1= User::whereIn('id',$likedOwners)->get();
- 
 
+
+        //  the best hashtags
+        $topHashtags = DB::table('hashtag_post')
+        ->select('hashtags.name', DB::raw('COUNT(*) as count'))
+        ->join('hashtags', 'hashtag_post.hashtag_id', '=', 'hashtags.id')
+        ->groupBy('hashtags.name')
+        ->orderByDesc('count')
+        ->limit(3)
+        ->get();
+// dd($topHashtagsWithNames);
+        // ---
+       
         // If the following user has a post
    if($followingPosts  ){
     
-       return view('post.index', compact('posts','user','following_id','PostsPrivateUsers','PublicUsers','followingPosts','users1','usersWithSameFollowingId','suggestedUsers'));}
+       return view('post.index', compact('posts','user','following_id','PostsPrivateUsers','PublicUsers','followingPosts','users1','usersWithSameFollowingId','suggestedUsers','topHashtags'));}
    
    
      else{// If the following user doesnt have a post
            
         
-       return view('post.index', compact('posts','user','users','PublicUsers','users1','suggestedUsers','followingPosts'));
+       return view('post.index', compact('posts','user','users','PublicUsers','users1','suggestedUsers','followingPosts','topHashtags'));
  }
         }
  
@@ -163,4 +175,51 @@ if($users){
 }
 // If the database was empty
 return view('post.index');
-         }}
+         }
+       
+         
+
+        //  Hashtag Search
+
+     
+ public function search(Request $request){
+
+
+    // validation
+
+
+
+    // dd($request);
+    $user = auth()->user();
+
+  // give request
+    $hashtag = $request->input('search');
+//  dd($hashtag);
+
+
+//find posts with this hashtags
+
+$posts = Post::where(function ($query) use ($hashtag) {
+  $query->where('title', 'like', "%$hashtag%")
+        ->orWhere('body', 'like', "%$hashtag%");
+      })
+      // just public users
+      ->whereHas('user', function ($query) {
+          $query->where('visibility', 'public');
+      })
+      // or just following 
+      ->orwhereIn('user_id', function ($query) {
+          $query->select('following_id')
+                ->from('followers')
+                ->where('user_id', auth()->id());
+      })
+      ->get();
+
+
+    if ($posts) {
+   
+   return view('post.search',compact('posts','user'));
+ }
+ return redirect()->back()->with('error','No posts found for the hashtag');
+ }
+}

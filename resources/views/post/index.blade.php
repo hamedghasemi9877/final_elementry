@@ -5,7 +5,8 @@
 @endif
 
 
-{{-- @include('hashtag.create') --}}
+
+{{--  --}}
 {{-- Suggestions with follow --}}
 @auth
 <p1>Suggested Users to Follow with <u> follow</u> system:</p1><br>
@@ -36,6 +37,7 @@
         <p1>{{$user1->name}}<form action="{{ route('follow',$user1->id) }}" method="POST">
             @csrf
             <button type="submit">Follow</button>
+
         </form></p1> 
 
 @endif
@@ -46,7 +48,6 @@
 @endauth
 <hr>
 {{--  --}}
-
 
 <div class="container">
     <div class="row justify-content-center">
@@ -92,9 +93,41 @@
         </div>
 
 
-        @if(auth()->check())
-         <a href="{{ route('post.create') }}" class="btn btn-success" style="font-size:30px">NewTweet</a>
+        @if(auth()->check()) 
+        <div> <a href="{{ route('post.create') }}" class="btn btn-success" style="font-size:30px">NewTweet</a></div>
+        
             @endif
+<hr>
+{{-- Hastag searach --}}
+
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header"><br>
+                    <h2 style="text-align: center;background-color: darkgrey">top Hashtags<div><img alt="" class="bg lr nr c" width="100" height="100" loading="eager" role="presentation" src="https://miro.medium.com/v2/resize:fit:512/1*lkH-hcmXV0Bks6-FFZ-VNg.png"></div></h2>
+                    @if(auth()->check())
+                    @foreach ($topHashtags as $topHashtag)
+                    <p style="background-color: rgb(177, 147, 147);text-align: center">  {{$topHashtag->name}} </p>
+                    @endforeach
+                    @endif</div>
+
+                <div class="card-body">
+                    <form action="{{route('hashtag.search')}}" method="GET">
+                        @csrf
+                        <div class="form-group">
+                            <input type="text" class="form-control"  name="search" placeholder="Search with Hashtag">
+                        </div>
+                        <button type="submit" class="btn btn-primary">Search</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{{-- --}}
+
+
 
             <h2>public posts:</h2>
             <table class="table table-bordered">
@@ -111,6 +144,7 @@
                     <th style="text-align:center">retweets</th>
                     <th style="text-align:center">Profiles</th>
                     <th style="text-align:center">FollowMetod</th>
+                    <th style="text-align:center">creation time</th>
                     
                     
                     
@@ -230,7 +264,7 @@
                         </form>
                     </td> 
                   
-                    
+                    <td>{{$post->created_at->format('H:i')}}</td>
               
               
              
