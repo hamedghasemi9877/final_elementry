@@ -15,9 +15,8 @@
 </div>
 
 
-
 <a href="/" class="btn btn-info" style="float: right">Home</a><br>
-<h1>Only public posts and posts of people you have already followed</h1>
+<h1 class="btn btn-warning">Only public posts and posts of people you have already followed</h1>
 
 @if ($posts->isEmpty())
     <p>No posts found for the hashtag.</p>
@@ -30,12 +29,11 @@
               
                
                 <th style="text-align:center">title</th>
+                <th style="text-align:center">text</th>
                 <th style="text-align:center">image</th>
                 <th style="text-align:center">video</th>
                 <th  width="250px" style="color:blue">comments</th>
                 <th  width="10px">like</th>
-                <th style="color: red" width="30px">Reports</th>
-                <th style="text-align:center">retweets</th>
                 <th style="text-align:center">Profiles</th>
                 <th style="text-align:center">FollowMetod</th>
                 
@@ -52,6 +50,7 @@
                 
                 
                 <td style="text-align:center">{{ $post->title }}</td>
+                <td style="text-align:center">{{ $post->body }}</td>
                
                 <td style="text-align:center">
 @if($post->image!==null)
@@ -101,47 +100,8 @@
     </form>
 </td>
     
-     <td style="text-align:center">
-        
-          <form action="{{route('post.report',$post->id)}}" method="POST">
-              @csrf
-              <input type="hidden"  name="post_id" value="{{$post->id}}" />
-                <input style="color: red" type="submit" value="ReportPost">
-              </form>
-      
-     </td>
-     <td>
-       
-       
-        <div class="container">
-            <div class="row justify-content-center">
-                <div style="text-align: center">
-                  
-                 
-                        
-                            <form action="{{ route('retweet.store',  $post->id) }}" method="POST">
-                                @csrf
-    
-                                <button type="submit" class="btn btn-primary">
-                                    {{ __('Retweet') }}
-                                </button>
-                            </form>
-                        
-                  
-                </div>
-            </div>
-           
-</td>
-                        </td>
-                    
-                    
-                    
-                
                 <td 
                 
-                
-                    
-               
                 style="text-align:center"> <a href="{{ route('profile.index',$post->user_id)}}">profile</a></td> 
                 
                 <td style="text-align:center">

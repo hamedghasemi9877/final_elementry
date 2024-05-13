@@ -15,8 +15,8 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use App\Http\Requests\StoreProfileRequest;
 
-class ProfileController extends Controller
-{
+class ProfileController extends Controller{
+    
 
     public function index(User $user){
       

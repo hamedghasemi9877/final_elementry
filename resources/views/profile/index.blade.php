@@ -16,7 +16,8 @@
 <h1 style="background-color: chartreuse">welcome to page of:<u>{{$user->name}}</u></h1><br>
 @endguest
 @if(auth()->check()&& auth()->user()->id!==$user->id)
-@if($user->visibility=='private')
+@if($user->visibility=='private' && !(auth()->user()->isFollowing($user->id)))
+
 <p style="background-color: rgb(231, 90, 118)">you should first follow then you can see  tweets in the home page </p> 
 @endif
 <h1 style="background-color: chartreuse">welcome to page of:<u>{{$user->name}}</u></h1><br>
@@ -65,7 +66,7 @@
 </div>
 
  @if($user->visibility=='private')
-<p style="background-color: crimson"> No one on the public page can see your tweets  </p> 
+<p style="background-color: crimson"> No one on the private page can see your tweets  </p> 
 @endif
  @if($user->visibility=='public')
 <p style="background-color: rgb(27, 220, 20)"> all people on the public page can see your tweets  </p> 
@@ -99,18 +100,13 @@
 
 {{--  --}}
 
+
+
+{{-- all tweets { the tweets of public users and followings} --}}
 <div class="container">
     <div class="row justify-content-center">
         <div class="col-md-12">
 
-{{-- change visibility[public or private] --}}
-
-               
-          
-{{--  --}}
-           
-
-{{-- all tweets { the tweets of public users and followers} --}}
             <h1 style="background-color: rgb(69, 75, 159)">Tweets</h1>
             <div class="container">
                 <div class="row justify-content-center">
@@ -136,7 +132,7 @@
 
 
                     @foreach ($posts as $post)
-    @if($user->visibility === 'public')
+    @if($user->visibility === 'public'||($user->visibility=='private' && (auth()->user()->isFollowing($user->id))))
         <tr>
             <td style="color:rgb(69, 40, 255)" >{{ $post->title }}</td>
             <td > {{ $post->body }}</td>

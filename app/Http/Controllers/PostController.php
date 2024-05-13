@@ -178,48 +178,63 @@ return view('post.index');
          }
        
          
-
-        //  Hashtag Search
+// ------------------------------------------------------------------
+      
 
      
  public function search(Request $request){
 
 
     // validation
+    $request->validate([
+      'search' => 'required|string|max:10' 
+  ]);
 
-
-
-    // dd($request);
     $user = auth()->user();
 
   // give request
     $hashtag = $request->input('search');
-//  dd($hashtag);
+    $hashtagExists = Hashtag::where('name',$hashtag)->exists();
+     
 
 
-//find posts with this hashtags
+                    // check
+   if($hashtagExists){
+    $hashtags2 = DB::table('hashtag_post')
+    ->join('hashtags', 'hashtag_post.hashtag_id', '=', 'hashtags.id')
+    ->where('hashtags.name', $hashtag)
+    ->pluck('post_id');
+  
+  
+     
 
-$posts = Post::where(function ($query) use ($hashtag) {
-  $query->where('title', 'like', "%$hashtag%")
-        ->orWhere('body', 'like', "%$hashtag%");
+      $posts = Post::whereIn('id', $hashtags2)
+      ->whereIn('user_id', function ($query) use ($hashtags2) {
+          $query->select('user_id')
+              ->from('posts')
+              ->whereIn('id', $hashtags2);
       })
-      // just public users
       ->whereHas('user', function ($query) {
+          // Filter for public users
           $query->where('visibility', 'public');
       })
-      // or just following 
-      ->orwhereIn('user_id', function ($query) {
-          $query->select('following_id')
-                ->from('followers')
-                ->where('user_id', auth()->id());
-      })
-      ->get();
+      
+     ->orWhere('user_id', function ($query) {
+         // Filter for users being followed
+         $query->select('following_id')
+             ->from('followers')
+             ->where('user_id', auth()->id());
+     })
+     ->get();
+         
+    //  dd($posts);
+    return view('post.search',compact('posts','user'));
 
-
-    if ($posts) {
+   }
+   else{
+    return redirect()->back()->with('error','No posts found for the hashtag');
    
-   return view('post.search',compact('posts','user'));
- }
- return redirect()->back()->with('error','No posts found for the hashtag');
- }
+  }
+
+}
 }
